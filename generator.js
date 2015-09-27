@@ -1,5 +1,5 @@
 //playlist objects have a number (1-12) and a key(A/B) to represent camelot wheel notation
-//NOTE: Traktor uses (m/d) for its respective notation
+//NOTE: I use Traktor (m/d) for its respective notation
 
 function storeTrack(playlist, title, num, key){
     playlist.push({title: title, num: num, key: key});
@@ -11,55 +11,110 @@ function matchkey(key1, key2){
 }
 
 //4A <-> 4A
-function sameNumKey(num1, num2){
+function sameNum(num1, num2){
     return num1 == num2;
 }
 
 //4A <-> 5A or 4B <-> 5B
 function adjacentNum(num1, num2){
-    if(num1 = num2 - 1){
+    if(num1 == num2 - 1 || num2 + 11){
         return true;
     }
-    
+    else if(num1 == num2 + 1 || num2 - 11){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+//4A -> 6A or 4A -> 11A
+function energyNum(num1, num2){
+    if(num1 == num2 - 2 || num2 + 10){
+        return true;
+    }
+    else if(num1 == num2 - 7 || num2 + 5){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+//4A -> 3B or 4B -> 5A
+function diagMix(num1, key1, num2, key2){
+    if(num1 == num2 - 1 || num2 + 11){
+        if(key1 == 'd' && key2 == 'm'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else if(num1 == num2 + 1 || num2 - 11){
+        if(key1 == 'm' && key2 == 'd'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
+}
+
+//4A -> 7B or 4B -> 1A
+function diagMix2(num1, key1, num2, key2){
+    if(num1 == num2 - 3 || num2 + 9){
+        if(key1 == 'm' && key2 == 'd'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else if(num1 == num2 + 3 || num2 - 9){
+        if(key1 == 'd' && key2 == 'm'){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    else{
+        return false;
+    }
 }
 
 //Given a playlist, this method creates a new playlist with matching or compatible songs based on the first song.
 function listCompatible(playlist){
     var newList = [];
-    var firstTrack = playlist.shift()
+    var firstTrack = playlist.shift();
 
     newList.push(firstTrack);
 
     for(var i = 0; i < playlist.length; i++){
-        //ex: 4A <-> 4A, easy
-        if(sameNumKey(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == true){
+        //ex: 4A <-> 4A or 4A <-> 4B, easy
+        if(sameNum(firstTrack.num, playlist[i].num) == true){
             newList.push(playlist[i]);
         }
         //ex: 4A <-> 5A, easy
-        else if(firstTrack.num == playlist[i].num - 1 || playlist[i].num + 11 || playlist[i].num + 1 || playlist[i].num -11 && matchkey(firstTrack.key, playlist[i].key) == true) {
-            newList.push(playlist[i]);
-        }
-        //ex: 4A <-> 4B, easy
-        else if(sameNumKey(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == false){
+        else if(adjacentNum(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == true){
             newList.push(playlist[i]);
         }
         //ex: 4A -> 6A, energy +2
-        else if(firstTrack.num == playlist[i].num - 2 || playlist[i].num + 10 && matchkey(firstTrack.key, playlist[i].key) == true){
-            newList.push(playlist[i]);
-        }
-        //ex: 4A -> 11A, energy +7/-5
-        else if(firstTrack.num == playlist[i].num - 7 || playlist[i].num + 5 && matchkey(firstTrack.key, playlist[i].key) == true){
+        else if(energyNum(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == true){
             newList.push(playlist[i]);
         }
         //ex: 4A -> 3B or 4B -> 5A
-        else if(firstTrack.num == playlist[i].num - 1 || playlist[i].num + 11 && matchkey(firstTrack.key, playlist[i].key) == false) {
+        else if(diagMix(firstTrack.num, firstTrack.key, playlist[i].num, playlist[i].key) == true){
             newList.push(playlist[i]);
         }
         //ex: 4A -> 7B or 4B -> 1A
-        else if(firstTrack.num == playlist[i].num - 3 || playlist[i].num + 9 && matchkey(firstTrack.key, playlist[i].key) == false){
+        else if(diagMix2(firstTrack.num, firstTrack.key, playlist[i].num, playlist[i].key) == true){
             newList.push(playlist[i]);
         }
-
     }
     newList.shift();
     return newList;
@@ -97,6 +152,7 @@ storeTrack(initialPlaylist3, "airlock", 5, "m");
 storeTrack(initialPlaylist3, "detroit 12am", 1, "m");
 //should not be compatible
 storeTrack(initialPlaylist3, "inconceivable", 8, "d");
+storeTrack(initialPlaylist3, "whyyyy", 1, "d");
 console.log("Initial Playlist 3");
 console.log(initialPlaylist3);
 console.log("Compatible with first song");
