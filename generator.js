@@ -10,6 +10,19 @@ function matchkey(key1, key2){
     return key1 == key2;
 }
 
+//4A <-> 4A
+function sameNumKey(num1, num2){
+    return num1 == num2;
+}
+
+//4A <-> 5A or 4B <-> 5B
+function adjacentNum(num1, num2){
+    if(num1 = num2 - 1){
+        return true;
+    }
+    
+}
+
 //Given a playlist, this method creates a new playlist with matching or compatible songs based on the first song.
 function listCompatible(playlist){
     var newList = [];
@@ -19,7 +32,7 @@ function listCompatible(playlist){
 
     for(var i = 0; i < playlist.length; i++){
         //ex: 4A <-> 4A, easy
-        if(firstTrack.num == playlist[i].num && matchkey(firstTrack.key, playlist[i].key) == true){
+        if(sameNumKey(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == true){
             newList.push(playlist[i]);
         }
         //ex: 4A <-> 5A, easy
@@ -27,7 +40,7 @@ function listCompatible(playlist){
             newList.push(playlist[i]);
         }
         //ex: 4A <-> 4B, easy
-        else if(firstTrack.num == playlist[i].num && matchkey(firstTrack.key, playlist[i].key) == false){
+        else if(sameNumKey(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == false){
             newList.push(playlist[i]);
         }
         //ex: 4A -> 6A, energy +2
