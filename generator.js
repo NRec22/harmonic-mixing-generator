@@ -17,10 +17,10 @@ function sameNum(num1, num2){
 
 //4A <-> 5A or 4B <-> 5B
 function adjacentNum(num1, num2){
-    if(num1 == num2 - 1 || num2 + 11){
+    if(num1 == num2 - 1 || num1 == num2 + 11){
         return true;
     }
-    else if(num1 == num2 + 1 || num2 - 11){
+    else if(num1 == num2 + 1 || num1 == num2 - 11){
         return true;
     }
     else{
@@ -30,10 +30,10 @@ function adjacentNum(num1, num2){
 
 //4A -> 6A or 4A -> 11A
 function energyNum(num1, num2){
-    if(num1 == num2 - 2 || num2 + 10){
+    if(num1 == num2 - 2 || num1 == num2 + 10){
         return true;
     }
-    else if(num1 == num2 - 7 || num2 + 5){
+    else if(num1 == num2 - 7 || num1 == num2 + 5){
         return true;
     }
     else{
@@ -43,7 +43,7 @@ function energyNum(num1, num2){
 
 //4A -> 3B or 4B -> 5A
 function diagMix(num1, key1, num2, key2){
-    if(num1 == num2 - 1 || num2 + 11){
+    if(num1 == num2 - 1 || num1 == num2 + 11){
         if(key1 == 'd' && key2 == 'm'){
             return true;
         }
@@ -51,7 +51,7 @@ function diagMix(num1, key1, num2, key2){
             return false;
         }
     }
-    else if(num1 == num2 + 1 || num2 - 11){
+    else if(num1 == num2 + 1 || num1 == num2 - 11){
         if(key1 == 'm' && key2 == 'd'){
             return true;
         }
@@ -66,7 +66,7 @@ function diagMix(num1, key1, num2, key2){
 
 //4A -> 7B or 4B -> 1A
 function diagMix2(num1, key1, num2, key2){
-    if(num1 == num2 - 3 || num2 + 9){
+    if(num1 == num2 - 3 || num1 == num2 + 9){
         if(key1 == 'm' && key2 == 'd'){
             return true;
         }
@@ -74,7 +74,7 @@ function diagMix2(num1, key1, num2, key2){
             return false;
         }
     }
-    else if(num1 == num2 + 3 || num2 - 9){
+    else if(num1 == num2 + 3 || num1 == num2 - 9){
         if(key1 == 'd' && key2 == 'm'){
             return true;
         }
@@ -103,7 +103,7 @@ function listCompatible(playlist){
         else if(adjacentNum(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == true){
             newList.push(playlist[i]);
         }
-        //ex: 4A -> 6A, energy +2
+        //: 4A -> 6A or 4A -> 11A, energy +2/+7
         else if(energyNum(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == true){
             newList.push(playlist[i]);
         }
@@ -153,6 +153,7 @@ storeTrack(initialPlaylist3, "detroit 12am", 1, "m");
 //should not be compatible
 storeTrack(initialPlaylist3, "inconceivable", 8, "d");
 storeTrack(initialPlaylist3, "whyyyy", 1, "d");
+storeTrack(initialPlaylist3, "2005", 3, "m");
 console.log("Initial Playlist 3");
 console.log(initialPlaylist3);
 console.log("Compatible with first song");
