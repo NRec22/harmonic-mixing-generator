@@ -1,5 +1,4 @@
-//playlist objects have a number (1-12) and a key(A/B) to represent camelot wheel notation
-//NOTE: I use Traktor (m/d) for its respective notation
+//playlist objects have a number (1-12) and a key(A/B) to represent camelot wheel notation. NOTE: I use Traktor (m/d) for its respective notation
 
 function storeTrack(playlist, title, num, key){
     playlist.push({title: title, num: num, key: key});
@@ -90,7 +89,7 @@ function diagMix2(num1, key1, num2, key2){
 //Given a playlist, this method creates a new playlist with matching or compatible songs based on the first song.
 function listCompatible(playlist){
     var newList = [];
-    var firstTrack = playlist.shift();
+    var firstTrack = playlist[0];
 
     newList.push(firstTrack);
 
@@ -118,6 +117,16 @@ function listCompatible(playlist){
     }
     newList.shift();
     return newList;
+}
+
+/*
+Given a playlist, this method sorts the playlist prioritizing harmonic transitions first.
+Works in a first come, first serve basis.
+ */
+function harmonicSort(playlist){
+    var sortedList = [playlist.shift()];
+    //WIP
+    return sortedList;
 }
 
 //testing below here
@@ -159,5 +168,9 @@ console.log(initialPlaylist3);
 console.log("Compatible with first song");
 console.log(listCompatible(initialPlaylist3));
 
-
+var initialPlaylist4 = initialPlaylist.concat(initialPlaylist2, initialPlaylist3);
+console.log("Initial Playlist 4");
+console.log(initialPlaylist4);
+console.log("harmonic sort on Playlist 4");
+console.log(harmonicSort(initialPlaylist4));
 
