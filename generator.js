@@ -1,4 +1,6 @@
-//playlist objects have a number (1-12) and a key(A/B) to represent camelot wheel notation. NOTE: I use Traktor (m/d) for its respective notation
+/*playlist objects have a number (1-12) and a key(A/B) to represent camelot wheel notation.
+NOTE: I use Traktor (m/d) for its respective notation.
+ */
 
 function storeTrack(playlist, title, num, key){
     playlist.push({title: title, num: num, key: key});
@@ -124,9 +126,36 @@ Given a playlist, this method sorts the playlist prioritizing harmonic transitio
 Works in a first come, first serve basis.
  */
 function harmonicSort(playlist){
-    var sortedList = [playlist.shift()];
-    //WIP
-    return sortedList;
+    var newList = [playlist.shift()];
+    var i = 0;
+    //still WIP
+    while(playlist.length > 10) {
+        if(sameNum(newList[newList.length - 1].num, playlist[0].num) == true) {
+            newList.push(playlist[0]);
+            playlist.splice(0, 1);
+        }
+        else if(adjacentNum(newList[newList.length - 1].num, playlist[i].num) == true && matchkey(newList[newList.length - 1].key, playlist[i].key) == true){
+            newList.push(playlist[i]);
+            playlist.splice(0, 1);
+        }
+        else if(energyNum(newList[newList.length - 1].num, playlist[i].num) == true && matchkey(newList[newList.length - 1].key, playlist[i].key) == true){
+            newList.push(playlist[i]);
+            playlist.splice(0, 1);
+        }
+        else if(diagMix(newList[newList.length - 1].num, newList[newList.length - 1].key, playlist[i].num, playlist[i].key) == true){
+            newList.push(playlist[i]);
+            playlist.splice(0, 1);
+        }
+        else if(diagMix2(newList[newList.length - 1].num, newList[newList.length - 1].key, playlist[i].num, playlist[i].key) == true){
+            newList.push(playlist[i]);
+            playlist.splice(0, 1);
+        }
+        else{
+            playlist.push(playlist.shift());
+        }
+    }
+
+    return newList;
 }
 
 //testing below here
