@@ -88,6 +88,29 @@ function diagMix2(num1, key1, num2, key2){
     }
 }
 
+//given two songs, returns whether they can be harmonically mixed
+function checkCompatible(num1, key1, num2, key2){
+    if(sameNum(num1, num2) == true){
+        return true;
+    }
+    else if(adjacentNum(num1, num2) == true && matchkey(key1, key2) == true){
+        return true;
+    }
+    else if(energyNum(num1, num2) == true && matchkey(key1, key2) == true){
+        return true;
+    }
+    else if(diagMix(num1, key1, num2, key2) == true){
+        return true;
+    }
+    else if(diagMix2(num1, key1, num2, key2) == true){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+
 //Given a playlist, this method creates a new playlist with matching or compatible songs based on the first song.
 function listCompatible(playlist){
     var newList = [];
@@ -96,24 +119,7 @@ function listCompatible(playlist){
     newList.push(firstTrack);
 
     for(var i = 0; i < playlist.length; i++){
-        //ex: 4A <-> 4A or 4A <-> 4B, easy
-        if(sameNum(firstTrack.num, playlist[i].num) == true){
-            newList.push(playlist[i]);
-        }
-        //ex: 4A <-> 5A, easy
-        else if(adjacentNum(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == true){
-            newList.push(playlist[i]);
-        }
-        //: 4A -> 6A or 4A -> 11A, energy +2/+7
-        else if(energyNum(firstTrack.num, playlist[i].num) == true && matchkey(firstTrack.key, playlist[i].key) == true){
-            newList.push(playlist[i]);
-        }
-        //ex: 4A -> 3B or 4B -> 5A
-        else if(diagMix(firstTrack.num, firstTrack.key, playlist[i].num, playlist[i].key) == true){
-            newList.push(playlist[i]);
-        }
-        //ex: 4A -> 7B or 4B -> 1A
-        else if(diagMix2(firstTrack.num, firstTrack.key, playlist[i].num, playlist[i].key) == true){
+        if(checkCompatible(firstTrack.num, firstTrack.key, playlist[i].num, playlist[i].key) == true){
             newList.push(playlist[i]);
         }
     }
@@ -127,27 +133,10 @@ Works in a first come, first serve basis.
  */
 function harmonicSort(playlist){
     var newList = [playlist.shift()];
-    var i = 0;
     //still WIP
     while(playlist.length > 10) {
-        if(sameNum(newList[newList.length - 1].num, playlist[0].num) == true) {
+        if(checkCompatible(newList[newList.length - 1].num, newList[newList.length -1].key, playlist[0].num, playlist[0].key)){
             newList.push(playlist[0]);
-            playlist.splice(0, 1);
-        }
-        else if(adjacentNum(newList[newList.length - 1].num, playlist[i].num) == true && matchkey(newList[newList.length - 1].key, playlist[i].key) == true){
-            newList.push(playlist[i]);
-            playlist.splice(0, 1);
-        }
-        else if(energyNum(newList[newList.length - 1].num, playlist[i].num) == true && matchkey(newList[newList.length - 1].key, playlist[i].key) == true){
-            newList.push(playlist[i]);
-            playlist.splice(0, 1);
-        }
-        else if(diagMix(newList[newList.length - 1].num, newList[newList.length - 1].key, playlist[i].num, playlist[i].key) == true){
-            newList.push(playlist[i]);
-            playlist.splice(0, 1);
-        }
-        else if(diagMix2(newList[newList.length - 1].num, newList[newList.length - 1].key, playlist[i].num, playlist[i].key) == true){
-            newList.push(playlist[i]);
             playlist.splice(0, 1);
         }
         else{
